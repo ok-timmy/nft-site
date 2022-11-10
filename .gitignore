@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/smart_contract/node_modules
+/smart_contract/starter_kit_2/node_modules
 
 # testing
 /coverage
