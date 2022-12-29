@@ -17,9 +17,9 @@ const Header = () => {
           <div className="hidden sm:flex flex-row space-x-4 justify-center items-center">
             
             <Link href={'/'} passHref><a className='text-link font-bold px-3'>Home</a></Link>
+            <Link href={'/marketplace'} passHref><a className='text-link font-bold px-3'>Marketplace</a></Link>
+            <Link href={'/collections'} passHref><a className='text-link font-bold px-3'>Collections</a></Link>
             <Link href={'/'} passHref><a className='text-link font-bold px-3'>About</a></Link>
-            <Link href={'/'} passHref><a className='text-link font-bold px-3'>Community</a></Link>
-            <Link href={'/'} passHref><a className='text-link font-bold px-3'>Discover</a></Link>
     
             <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink focus:outline-none hover:bg-transparent hover:text-special-pink duration-150 justify-center items-center">
               Sign Up

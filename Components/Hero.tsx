@@ -3,6 +3,7 @@ import Image from 'next/image'
 import ImageOne from '../public/image1.png'
 import NFTONE from '../public/NFT1.png'
 import NFTTWO from '../public/NFT2.png'
+import Link from 'next/link'
 
 const Hero = () => {
   return (
@@ -21,9 +22,11 @@ const Hero = () => {
             Explore the world of possibilities now
           </p>
           <div className="flex w-auto">
+            <Link href={"/create"}>
             <button className="mr-12 px-16 rounded-md flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-special-pink border border-special-pink focus:outline-none hover:bg-transparent hover:text-special-pink duration-150 justify-center items-center">
               Create
             </button>
+            </Link>
             <button className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
               Connect Wallet
             </button>
