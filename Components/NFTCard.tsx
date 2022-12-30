@@ -1,12 +1,16 @@
 import React from 'react'
+import Image from 'next/image';
+import nftImage from '../public/nftImage.jpg'
 
 const NFTCard = () => {
   return (
     <div className="flex justify-center">
       <div className="rounded-lg shadow-lg  max-w-sm border-[1.5px] border-special-pink">
-        <img
+        <Image
           className="rounded-t-lg"
-          src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
+          height={300}
+          width={300}
+          src={nftImage}
           alt=""
         />
         <div className="p-6">
