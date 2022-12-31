@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image';
 import nftImage from '../public/nftImage.jpg'
+import { nftContext } from '../Context/nftContext';
+import { nftContextType } from '../Interfaces/nftInterface';
 
 const NFTCard = () => {
+
+  const { buyMarketitem } = useContext(nftContext) as nftContextType
+
+
   return (
     <div className="flex justify-center">
       <div className="rounded-lg shadow-lg  max-w-sm border-[1.5px] border-special-pink">

@@ -1,11 +1,23 @@
 import Head from 'next/head'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import Collection from '../Components/Collection'
 import Footer from '../Components/Footer'
 import Header from '../Components/Header'
 import NFTCard from '../Components/NFTCard'
+import { nftContext } from '../Context/nftContext'
+import { nftContextType } from '../Interfaces/nftInterface'
 
 const Collections = () => {
+
+  const {loadPurchasedItems, loadMarketPlaceItems, listedItems, soldItems, isLoading} = useContext(nftContext) as nftContextType;
+
+  useEffect(() => {
+    loadPurchasedItems();
+    loadMarketPlaceItems();
+  }, [])
+  
+
+
   return (
     <>
     <Head>

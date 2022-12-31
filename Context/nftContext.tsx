@@ -26,11 +26,12 @@ const client = create({
 
 export const nftContext = createContext<nftContextType | null>(null);
 
-export const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
+ const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [account, setAccount] = useState()
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState(0);
+  const [category, setCategory] = useState("")
   const [items, setItems] = useState()
   const [isLoading, setIsLoading] = useState(true);
   const [purchases, setPurchases] = useState();
@@ -41,7 +42,7 @@ export const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
   const [nft, setNft] = useState();
 
   //Metamask Connection
-  const web3handler = async () => {
+  const web3Handler = async () => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
@@ -256,12 +257,14 @@ export const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
       setDescription,
       price,
       setPrice,
+      category,
+      setCategory,
       items,
       isLoading,
       purchases,
       listedItems,
       soldItems,
-      web3handler,
+      web3Handler,
       buyMarketitem,
       loadMarketPlaceItems,
       loadListedItems,
@@ -274,3 +277,5 @@ export const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
     </nftContext.Provider>
   )
 };
+
+export default NftProvider

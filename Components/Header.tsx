@@ -1,8 +1,11 @@
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { nftContext } from '../Context/nftContext'
+import { nftContextType } from '../Interfaces/nftInterface'
 
 const Header = () => {
   const [show, setshow] = useState(false)
+  const {web3Handler, account} = useContext(nftContext) as nftContextType
 
   return (
     <div className=" bg-brick-purple px-4">
@@ -21,12 +24,12 @@ const Header = () => {
             <Link href={'/collections'} passHref><a className='text-link font-bold px-3'>Collections</a></Link>
             <Link href={'/'} passHref><a className='text-link font-bold px-3'>About</a></Link>
     
-            <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink focus:outline-none hover:bg-transparent hover:text-special-pink duration-150 justify-center items-center">
-              Sign Up
+            <button onClick={web3Handler} className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink focus:outline-none hover:bg-transparent hover:text-special-pink duration-150 justify-center items-center">
+              {account ===null ? "Connect Wallet" : `${account.slice(0, 5)}...${account.slice(36)}`}
             </button>
-            <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
+            {/* <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
               Login
-            </button>
+            </button> */}
           </div>
           {/* Burger Icon */}
           <div
@@ -183,12 +186,12 @@ const Header = () => {
             </svg>
           </div>
           <div className="flex flex-col gap-4 mt-4 w-80 mx-auto ">
-            <button className="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-indigo-700 bg-indigo-600 bg-opacity-0 hover:opacity-100 border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center">
-              Sign Up
+            <button onClick={web3Handler} className="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-indigo-700 bg-indigo-600 bg-opacity-0 hover:opacity-100 border border-indigo-700 focus:outline-none focus:bg-gray-200 hover:bg-gray-200 duration-150 justify-center items-center">
+            {account ===null ? "Connect Wallet" : `${account.slice(0, 5)}...${account.slice(36)}`}
             </button>
-            <button className="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-white bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:bg-indigo-600 hover:bg-indigo-600 duration-150 justify-center items-center">
+            {/* <button className="rounded-md flex space-x-2 w-full h-10 font-normal text-sm leading-3 text-white bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 focus:bg-indigo-600 hover:bg-indigo-600 duration-150 justify-center items-center">
               Sign In
-            </button>
+            </button> */}
           </div>
         </div>
       </nav>

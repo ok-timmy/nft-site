@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image'
 import ImageOne from '../public/image1.png'
 import NFTONE from '../public/NFT1.png'
 import NFTTWO from '../public/NFT2.png'
 import Link from 'next/link'
+import { nftContext } from '../Context/nftContext'
+import { nftContextType } from '../Interfaces/nftInterface'
 
 const Hero = () => {
+  const {web3Handler} = useContext(nftContext) as nftContextType;
+
+  
   return (
     <section className="bg-special-background px-4 py-16">
       <div className="grid grid-flow-col grid-cols-2 px-6 py-4">
@@ -27,7 +32,7 @@ const Hero = () => {
               Create
             </button>
             </Link>
-            <button className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
+            <button onClick={()=>web3Handler} className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
               Connect Wallet
             </button>
           </div>

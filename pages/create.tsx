@@ -1,68 +1,61 @@
 import Head from 'next/head'
-import React, { useState } from 'react'
+import * as React from 'react'
+import { useState, useContext } from 'react'
 import Footer from '../Components/Footer'
 import Header from '../Components/Header'
-import { Buffer } from 'buffer'
-import { create } from 'ipfs-http-client'
-import {config} from "dotenv";
+import { config } from 'dotenv'
+import { nftContext } from '../Context/nftContext'
+import { nftContextType } from '../Interfaces/nftInterface'
+import Image from 'next/image'
 
+config()
 
-config();
+// const projectId = process.env.PROJECT_ID
+// // process.env.PROJECT_ID;   // <---------- your Infura Project ID
 
-const projectId = process.env.PROJECT_ID
-// process.env.PROJECT_ID;   // <---------- your Infura Project ID
+// const projectSecret = process.env.PROJECT_KEY
+// // process.env.PROJECT_KEY;  // <---------- your Infura Secret
 
-const projectSecret = process.env.PROJECT_KEY
-// process.env.PROJECT_KEY;  // <---------- your Infura Secret
+// const auth =
+//   'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64')
 
-const auth =
-  'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64')
+// const client = create({
+//   host: 'ipfs.infura.io',
+//   port: 5001,
+//   protocol: 'https',
+//   headers: {
+//     authorization: auth,
+//   },
+// })
 
-const client = create({
-  host: 'ipfs.infura.io',
-  port: 5001,
-  protocol: 'https',
-  headers: {
-    authorization: auth,
-  },
-})
-
-const Create = () => {
-  const [name, setName] = useState('')
-  const [price, setPrice] = useState('0')
-  const [category, setCategory] = useState('')
-  const [nftImage, setNftImage] = useState({})
+const Create: React.FC = () => {
+  const {
+    name,
+    setName,
+    price,
+    setPrice,
+    category,
+    setCategory,
+    description,
+    setDescription,
+    isLoading,
+    uploadToIPFS,
+    createNFT,
+  } = React.useContext(nftContext) as nftContextType
   const [nftImageUrl, setNftImageUrl] = useState('')
-  const [isLoading, setisLoading] = useState(false)
-
-  const captureFile = (e: any) => {
-    const file = e.target.files[0]
-    const reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
-    reader.onloadend = () => {
-      const res = Buffer.from(reader.result)
-      console.log(res)
-      setNftImage(res)
-    }
-  }
 
   const displayImage = (e: any) => {
     const file = e.target.files[0]
     const reader = new window.FileReader()
     reader.onloadend = () => {
       // convert file to base64 String
-      const base64String = reader.result
+      const base64String: string = reader.result
         ?.replace('data:', '')
         .replace(/^.+,/, '')
       console.log('set NFT URL Image successfully')
       setNftImageUrl(`data:image/png;base64,${base64String}`)
     }
     reader.readAsDataURL(file)
-  }
-
-  const mintNFT = (e: any) => {
-    e.preventDefault();
-    setisLoading(!isLoading);
   }
 
   return (
@@ -88,9 +81,11 @@ const Create = () => {
             <form>
               {/* Image when selected */}
               {nftImageUrl && (
-                <img
+                <Image
                   src={`${nftImageUrl}`}
                   alt="Nft Preview"
+                  height={300}
+                  width={300}
                   className="my-6 rounded-lg"
                 />
               )}
@@ -207,7 +202,7 @@ const Create = () => {
                 </label>
                 <input
                   onChange={(e) => {
-                    captureFile(e)
+                    uploadToIPFS(e)
                     displayImage(e)
                   }}
                   className="form-control
@@ -231,7 +226,7 @@ const Create = () => {
               </div>
 
               <button
-              onClick={e=>mintNFT(e)}
+                onClick={createNFT}
                 type="button"
                 className="w-full inline-block px-6 py-1.5 border border-special-pink text-special-pink font-medium text-lg leading-normal uppercase rounded hover:bg-special-pink focus:bg-special-background focus:text-special-pink hover:text-special-background focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
               >
@@ -256,6 +251,5 @@ const Create = () => {
 }
 
 export default Create
-
 
 //TODO - Sort The dotenv issue.
