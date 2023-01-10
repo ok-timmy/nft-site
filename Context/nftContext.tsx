@@ -1,6 +1,6 @@
 import  React, { useState, createContext } from "react"
 import { marketPlaceAddress, marketPlaceAbi } from "../nft_abis/marketPlaceAbi";
-import { ipfsInterface, nftContextType, nftType } from "../Interfaces/nftInterface";
+import { ipfsInterface, marketPlaceInterface, nft, nftContextType, nftType } from "../Interfaces/nftInterface";
 import { nftAbi, nftAddress } from "../nft_abis/nftDetails";
 import { ethers } from "ethers";
 import { create } from "ipfs-http-client";
@@ -27,19 +27,19 @@ const client = create({
 export const nftContext = createContext<nftContextType | null>(null);
 
  const NftProvider: React.FC<React.ReactNode> = ({ children }) => {
-  const [account, setAccount] = useState()
-  const [image, setImage] = useState("");
-  const [name, setName] = useState("");
+  const [account, setAccount] = useState<string>("")
+  const [image, setImage] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState("")
-  const [items, setItems] = useState()
+  const [category, setCategory] = useState<string>("")
+  const [items, setItems] = useState<Array<Object>>()
   const [isLoading, setIsLoading] = useState(true);
   const [purchases, setPurchases] = useState();
   const [description, setDescription] = useState("");
-  const [listedItems, setListedItems] = useState();
-  const [soldItems, setSoldItems] = useState();
-  const [marketPlace, setMarketPlace] = useState();
-  const [nft, setNft] = useState();
+  const [listedItems, setListedItems] = useState<Array<Object>>();
+  const [soldItems, setSoldItems] = useState<Array<Object>>();
+  const [marketPlace, setMarketPlace] = useState<marketPlaceInterface>();
+  const [nft, setNft] = useState<nft>();
 
   //Metamask Connection
   const web3Handler = async () => {
@@ -79,14 +79,16 @@ export const nftContext = createContext<nftContextType | null>(null);
     const uri = `https://ipfs.infura.io/ipfs/${result.path}`;
 
     //Mint NFT
-    await nft.mint(uri);
+    await nft?.mint(uri);
     // Get token Id for nft
-    const id = await nft.tokenCount();
+    const id = await nft?.tokenCount();
     //Approve Marketplace to spend nft
-    await (await nft.setApprovalForAll(marketPlace.address, true)).wait();
+    let marketaddress = marketPlace?.address
+    let nftaddress = nft?.address
+    await (await nft?.setApprovalForAll(marketaddress as string, true))?.wait();
     //Add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString());
-    await (await marketPlace.makeItem(nft.address, id, listingPrice)).wait();
+    await (await marketPlace?.makeItem(nftaddress as string, id, listingPrice)).wait();
   };
 
   // Create NFT Function
@@ -171,21 +173,21 @@ export const nftContext = createContext<nftContextType | null>(null);
 
   //Load Listed Items
   const loadListedItems = async () => {
-    const itemCount = await marketPlace.itemCount();
+    const itemCount = await marketPlace?.itemCount();
     let listedItems = [];
     let soldItems = [];
 
-    for (let index = 0; index < itemCount.length; index++) {
-      const i = await marketPlace.items(index);
+    for (let index = 0; index < itemCount; index++) {
+      const i = await marketPlace?.items(index);
       if (i.seller.toLowerCase() === account) {
         // Get URI URL from nft contract
-        const uri = await nft.tokenURL(i.tokenId);
+        const uri = await nft?.tokenURL(i.tokenId);
         //use the uri to fetch metadata stored on ipfs
         const response = await fetch(uri);
         const metadata = await response.json();
 
         //Get total price of item
-        const totalPrice = await marketPlace.getTotalPrice(i.itemId);
+        const totalPrice = await marketPlace?.getTotalPrice(i.itemId);
         //Define Listed item object
         let item = {
           totalPrice,
@@ -209,19 +211,19 @@ export const nftContext = createContext<nftContextType | null>(null);
   //Load MarketPlace Items
   const loadMarketPlaceItems = async () => {
     console.log(marketPlace);
-    const itemCount = await marketPlace.itemCount();
+    const itemCount = await marketPlace?.itemCount();
     let itemsArray = [];
     for (let i = 1; i < itemCount.length; i++) {
-      const item = await marketPlace.items(i);
+      const item = await marketPlace?.items(i);
       if (!item.sold) {
         //get uri url from nft contract
-        const uri = await nft.tokenURI(item.tokenId);
+        const uri = await nft?.tokenURI(item.tokenId);
         //use uri to fetch nft metadata stored on ipfs
         const response = await fetch(uri);
         const metadata = await response.json();
 
         //get total price
-        const totalPrice = await marketPlace.getTotalPrice(item.itemId);
+        const totalPrice = await marketPlace?.getTotalPrice(item.itemId);
         // Add Item to items array
         itemsArray.push({
           totalPrice,

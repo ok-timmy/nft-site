@@ -22,10 +22,10 @@ const Header = () => {
             <Link href={'/'} passHref><a className='text-link font-bold px-3'>Home</a></Link>
             <Link href={'/marketplace'} passHref><a className='text-link font-bold px-3'>Marketplace</a></Link>
             <Link href={'/collections'} passHref><a className='text-link font-bold px-3'>Collections</a></Link>
-            <Link href={'/'} passHref><a className='text-link font-bold px-3'>About</a></Link>
+            {/* <Link href={'/'} passHref><a className='text-link font-bold px-3'>About</a></Link> */}
     
-            <button onClick={web3Handler} className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink focus:outline-none hover:bg-transparent hover:text-special-pink duration-150 justify-center items-center">
-              {account ===null ? "Connect Wallet" : `${account.slice(0, 5)}...${account.slice(36)}`}
+            <button onClick={web3Handler} className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
+              {account ==="" ? "Connect Wallet" : `${account.slice(0, 5)}...${account.slice(36)}`}
             </button>
             {/* <button className="rounded-md flex space-x-2 w-24 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
               Login
