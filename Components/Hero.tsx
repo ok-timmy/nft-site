@@ -8,7 +8,7 @@ import { nftContext } from '../Context/nftContext'
 import { nftContextType } from '../Interfaces/nftInterface'
 
 const Hero = () => {
-  const {web3Handler} = useContext(nftContext) as nftContextType;
+  const {web3Handler, account} = useContext(nftContext) as nftContextType;
 
   
   return (
@@ -32,9 +32,9 @@ const Hero = () => {
               Create
             </button>
             </Link>
-            <button onClick={()=>web3Handler} className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
+           {!account && <button onClick={()=>web3Handler} className="rounded-md px-6 flex space-x-2 h-10 font-normal text-sm leading-3 text-link bg-transparent border border-special-pink  hover:text-special-pink duration-150 justify-center items-center">
               Connect Wallet
-            </button>
+            </button>}
           </div>
         </div>
         <div className=" flex mx-auto relative align-baseline">

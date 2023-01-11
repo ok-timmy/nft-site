@@ -49,8 +49,8 @@ const Create: React.FC = () => {
     const reader = new window.FileReader()
     reader.onloadend = () => {
       // convert file to base64 String
-      const base64String: string = reader.result
-        ?.replace('data:', '')
+      const base64String: any = (reader.result as string)
+        .replace('data:', '')
         .replace(/^.+,/, '')
       console.log('set NFT URL Image successfully')
       setNftImageUrl(`data:image/png;base64,${base64String}`)
@@ -135,7 +135,7 @@ const Create: React.FC = () => {
                 <input
                   type="number"
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => setPrice(Number(e.target.value))}
                   autoComplete="off"
                   className="form-control
         block
