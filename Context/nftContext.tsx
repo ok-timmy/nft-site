@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react'
+import React, { useState, createContext, useEffect } from 'react'
 import { marketPlaceAddress, marketPlaceAbi } from '../nft_abis/marketPlaceAbi'
 import {
   ipfsInterface,
@@ -43,7 +43,7 @@ const NftProvider = ({ children }: Props) => {
   const [price, setPrice] = useState(0)
   const [category, setCategory] = useState<string>('')
   const [items, setItems] = useState<Array<Object>>()
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [purchases, setPurchases] = useState<any>()
   const [description, setDescription] = useState('')
   const [listedItems, setListedItems] = useState<Array<Object>>()
@@ -84,10 +84,11 @@ const NftProvider = ({ children }: Props) => {
     setIsLoading(false)
   }
 
+  
+
   // Mint Then List Function
   const mintThenList = async (result: ipfsInterface) => {
     const uri = `https://ipfs.infura.io/ipfs/${result.path}`
-
     //Mint NFT
     await nft?.mint(uri)
     // Get token Id for nft
@@ -98,19 +99,22 @@ const NftProvider = ({ children }: Props) => {
     await (await nft?.setApprovalForAll(marketaddress as string, true))?.wait()
     //Add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
-    await (
+
       await marketPlace?.makeItem(nftaddress as string, id, listingPrice)
-    ).wait()
+    .wait()
+
   }
 
   // Create NFT Function
   const createNFT = async () => {
-    if (!image || !price || !description || !name) return
+    if (!image || !price || !category || !name) return
+    setIsLoading(true);
     try {
       const result = await client.add(
-        JSON.stringify({ image, name, description }),
+        JSON.stringify({ image, name, category }),
       )
       mintThenList(result)
+      setIsLoading(false);
     } catch (error) {
       console.log('ipfs upload error: ', error)
     }
