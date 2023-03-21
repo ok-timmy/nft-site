@@ -5,7 +5,7 @@ import Footer from '../Components/Footer'
 import Header from '../Components/Header'
 import NFTCard from '../Components/NFTCard'
 import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftInterface'
+import { nftContextType } from '../Interfaces/nftType.interface'
 
 const Collections = () => {
 

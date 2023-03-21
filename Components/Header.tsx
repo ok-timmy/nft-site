@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { useContext, useState } from 'react'
 import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftInterface'
+import { nftContextType } from '../Interfaces/nftType.interface'
 
 const Header = () => {
   const [show, setshow] = useState(false)

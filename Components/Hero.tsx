@@ -5,7 +5,7 @@ import NFTONE from '../public/NFT1.png'
 import NFTTWO from '../public/NFT2.png'
 import Link from 'next/link'
 import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftInterface'
+import { nftContextType } from '../Interfaces/nftType.interface'
 
 const Hero = () => {
   const {web3Handler, account} = useContext(nftContext) as nftContextType;

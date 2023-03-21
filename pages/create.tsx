@@ -5,7 +5,7 @@ import Footer from '../Components/Footer'
 import Header from '../Components/Header'
 import { config } from 'dotenv'
 import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftInterface'
+import { nftContextType } from '../Interfaces/nftType.interface'
 import Image from 'next/image'
 
 config()

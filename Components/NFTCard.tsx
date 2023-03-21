@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Image from 'next/image';
 import nftImage from '../public/nftImage.jpg'
 import { nftContext } from '../Context/nftContext';
-import { nftContextType } from '../Interfaces/nftInterface';
+import { nftContextType } from '../Interfaces/nftType.interface';
 
 const NFTCard = () => {
 

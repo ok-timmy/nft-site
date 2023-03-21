@@ -6,7 +6,7 @@ import {
   nft,
   nftContextType,
   nftType,
-} from '../Interfaces/nftInterface'
+} from '../Interfaces/nftType.interface'
 import { nftAbi, nftAddress } from '../nft_abis/nftDetails'
 import { ethers } from 'ethers'
 import { create } from 'ipfs-http-client'
@@ -52,7 +52,7 @@ const NftProvider = ({ children }: Props) => {
   const [nft, setNft] = useState<nft | any>()
 
   //Metamask Connection
-  const web3Handler = async () => {
+  const web3Handler = async () : Promise<void> => {
     const accounts = await (window as any).ethereum.request({
       method: 'eth_requestAccounts',
     })
@@ -69,7 +69,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   //Load NFT Contract
-  const loadContract = async (signer: any) => {
+  const loadContract = async (signer: any) : Promise<void> => {
     const marketplaceContract = new ethers.Contract(
       marketPlaceAddress,
       marketPlaceAbi,
@@ -87,7 +87,7 @@ const NftProvider = ({ children }: Props) => {
   
 
   // Mint Then List Function
-  const mintThenList = async (result: ipfsInterface) => {
+  const mintThenList = async (result: ipfsInterface) : Promise<void> => {
     const uri = `https://ipfs.infura.io/ipfs/${result.path}`
     //Mint NFT
     await nft?.mint(uri)
@@ -106,7 +106,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   // Create NFT Function
-  const createNFT = async () => {
+  const createNFT = async () : Promise<void>  => {
     if (!image || !price || !category || !name) return
     setIsLoading(true);
     try {
@@ -121,7 +121,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   //Upload to IPFS Function
-  const uploadToIPFS = async (e: React.SyntheticEvent<EventTarget>) => {
+  const uploadToIPFS = async (e: React.SyntheticEvent<EventTarget>) : Promise<void> => {
     // console.log(client);
     e.preventDefault()
     const file = e.target.files[0]
@@ -144,7 +144,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   //Load Purchased Items
-  const loadPurchasedItems = async () => {
+  const loadPurchasedItems = async (): Promise<void> => {
     //Fetch purchased items from marketplace by querying the NFTPurchased event
 
     const filter = marketPlace.filters.NFTPurchased(
@@ -188,7 +188,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   //Load Listed Items
-  const loadListedItems = async () => {
+  const loadListedItems = async (): Promise<void> => {
     const itemCount = await marketPlace?.itemCount()
     let listedItems = []
     let soldItems = []
@@ -225,7 +225,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   //Load MarketPlace Items
-  const loadMarketPlaceItems = async () => {
+  const loadMarketPlaceItems = async () : Promise<void> => {
     console.log(marketPlace)
     const itemCount = await marketPlace?.itemCount()
     let itemsArray = []
@@ -256,7 +256,7 @@ const NftProvider = ({ children }: Props) => {
   }
 
   // Buy NFT Item
-  const buyMarketitem = async (item: nftType) => {
+  const buyMarketitem = async (item: nftType): Promise<void> => {
     await (
       await marketPlace.buyItem(item.itemId, { value: item.totalPrice })
     ).wait()
