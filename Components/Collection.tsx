@@ -1,13 +1,25 @@
+import Image from 'next/image'
 import React from 'react'
 
-const Collection = () => {
+type CollectionCardProps = {
+  itemId: string;
+  name: string;
+  image: string;
+  seller: string;
+  description: string;
+  totalPrice: string;
+};
+
+const Collection = ({itemId, name, description, image, totalPrice}: CollectionCardProps) => {
   return (
     <div className="flex justify-center">
       <div className="rounded-lg shadow-lg  max-w-sm border-[1.5px] border-special-pink">
-        <img
+        <Image
           className="rounded-t-lg"
           src="https://mdbootstrap.com/img/new/standard/nature/182.jpg"
           alt=""
+          width={300}
+          height={300}
         />
         <div className="p-6">
           <div className='flex justify-between mb-4 items-baseline'>

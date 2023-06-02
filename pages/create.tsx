@@ -1,14 +1,14 @@
-import Head from 'next/head'
-import * as React from 'react'
-import { useState, useContext } from 'react'
-import Footer from '../Components/Footer'
-import Header from '../Components/Header'
-import { config } from 'dotenv'
-import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftType.interface'
-import Image from 'next/image'
+import Head from "next/head";
+import * as React from "react";
+import { useState, useContext } from "react";
+import Footer from "../Components/Footer";
+import Header from "../Components/Header";
+import { config } from "dotenv";
+import { nftContext } from "../Context/nftContext";
+import { nftContextType } from "../Interfaces/nftContext.type";
+import Image from "next/image";
 
-config()
+config();
 
 // const projectId = process.env.PROJECT_ID
 // // process.env.PROJECT_ID;   // <---------- your Infura Project ID
@@ -41,22 +41,22 @@ const Create: React.FC = () => {
     isLoading,
     uploadToIPFS,
     createNFT,
-  } = React.useContext(nftContext) as nftContextType
-  const [nftImageUrl, setNftImageUrl] = useState('')
+  } = React.useContext(nftContext) as nftContextType;
+  const [nftImageUrl, setNftImageUrl] = useState("");
 
   const displayImage = (e: any) => {
-    const file = e.target.files[0]
-    const reader = new window.FileReader()
+    const file = e.target.files[0];
+    const reader = new window.FileReader();
     reader.onloadend = () => {
       // convert file to base64 String
       const base64String: any = (reader.result as string)
-        .replace('data:', '')
-        .replace(/^.+,/, '')
-      console.log('set NFT URL Image successfully')
-      setNftImageUrl(`data:image/png;base64,${base64String}`)
-    }
-    reader.readAsDataURL(file)
-  }
+        .replace("data:", "")
+        .replace(/^.+,/, "");
+      console.log("set NFT URL Image successfully");
+      setNftImageUrl(`data:image/png;base64,${base64String}`);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div>
@@ -158,18 +158,18 @@ const Create: React.FC = () => {
                 />
               </div>
 
-              {/* NFT Category */}
+              {/* NFT Description */}
               <div className="form-group mb-6">
                 <label
                   htmlFor="exampleInputEmail2"
                   className="form-label inline-block mb-2 text-special-pink"
                 >
-                  NFT Category
+                  NFT Description
                 </label>
                 <input
                   type="text"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   autoComplete="off"
                   className="form-control
         block
@@ -188,7 +188,7 @@ const Create: React.FC = () => {
         focus:text-special-pink focus:bg-special-background focus:border-special-pink focus:outline-none"
                   id="exampleInputEmail2"
                   aria-describedby="nftcategory"
-                  placeholder="Enter NFT Category"
+                  placeholder="Enter NFT Description"
                 />
               </div>
 
@@ -202,8 +202,8 @@ const Create: React.FC = () => {
                 </label>
                 <input
                   onChange={(e) => {
-                    uploadToIPFS(e)
-                    displayImage(e)
+                    uploadToIPFS(e);
+                    displayImage(e);
                   }}
                   className="form-control
     block
@@ -238,7 +238,7 @@ const Create: React.FC = () => {
                     <span className="hidden">Loading...</span>
                   </div>
                 ) : (
-                  'List On Marketplace'
+                  "List On Marketplace"
                 )}
               </button>
             </form>
@@ -247,9 +247,9 @@ const Create: React.FC = () => {
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Create
+export default Create;
 
 //TODO - Sort The dotenv issue.

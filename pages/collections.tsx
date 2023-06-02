@@ -5,18 +5,18 @@ import Footer from '../Components/Footer'
 import Header from '../Components/Header'
 import NFTCard from '../Components/NFTCard'
 import { nftContext } from '../Context/nftContext'
-import { nftContextType } from '../Interfaces/nftType.interface'
+import { nftContextType } from '../Interfaces/nftContext.type'
+
 
 const Collections = () => {
 
-  const {loadPurchasedItems, loadMarketPlaceItems, listedItems, soldItems, isLoading} = useContext(nftContext) as nftContextType;
+  const {loadPurchasedItems, loadMarketPlaceItems, purchases, listedItems, soldItems, isLoading} = useContext(nftContext) as nftContextType;
 
   useEffect(() => {
     loadPurchasedItems();
-    loadMarketPlaceItems();
   }, [])
   
-
+console.log(purchases);
 
   return (
     <>
@@ -38,11 +38,8 @@ const Collections = () => {
           My Collections
         </header>
 
+
         <div className=" px-8 grid grid-flow-row lg:grid-cols-3 gap-8 sm:grid-cols-2">
-          <Collection/>
-          <Collection/>
-          <Collection/>
-          <Collection/>
           <Collection/>
         </div>
       </div>

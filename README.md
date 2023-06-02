@@ -38,4 +38,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 Make a loading overlay that displays until all transaction is completed
 Empty the form on the create page immediately the minting and listing is successful
 Handle the errors properly and use display appropriate messages for each error rather than the app just crashing
+Implement the collection page and the marketplace page well.
 Implement cypress test to the app.

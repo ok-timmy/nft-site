@@ -1,10 +1,27 @@
-import Head from 'next/head'
-import React from 'react'
-import Footer from '../Components/Footer'
-import Header from '../Components/Header'
-import NFTCard from '../Components/NFTCard'
+import Head from "next/head";
+import React, { useContext, useEffect } from "react";
+import Footer from "../Components/Footer";
+import Header from "../Components/Header";
+import NFTCard from "../Components/NFTCard";
+import { nftContext } from "../Context/nftContext";
+import { nftContextType } from "../Interfaces/nftContext.type";
 
 const Marketplace = () => {
+  const {
+    loadPurchasedItems,
+    loadMarketPlaceItems,
+    items,
+    listedItems,
+    soldItems,
+    isLoading,
+  } = useContext(nftContext) as nftContextType;
+
+  useEffect(() => {
+    loadMarketPlaceItems();
+  }, []);
+
+  console.log(items, isLoading, soldItems);
+
   return (
     <>
       <Head>
@@ -26,15 +43,29 @@ const Marketplace = () => {
         </header>
 
         <div className=" px-8 grid grid-flow-row lg:grid-cols-3 gap-8 sm:grid-cols-2">
-          <NFTCard/>
-          <NFTCard/>
-          <NFTCard/>
-          <NFTCard/>
+          {items && items.length !== 0 ? (
+            items.map((item) => {
+              return (
+                <div key={item?.itemId}>
+                  <NFTCard
+                    itemId={item?.itemId}
+                    name={item?.name}
+                    image={item?.image}
+                    description={item?.description}
+                    seller={item?.seller}
+                    totalPrice={item?.totalPrice}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <div>No NFT Listed Yet</div>
+          )}
         </div>
       </div>
       <Footer />
     </>
-  )
-}
+  );
+};
 
-export default Marketplace
+export default Marketplace;

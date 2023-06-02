@@ -46,7 +46,7 @@ const NftProvider = ({ children }: Props) => {
   const [description, setDescription] = useState("");
   const [listedItems, setListedItems] = useState<Array<Object>>();
   const [soldItems, setSoldItems] = useState<Array<Object>>();
-  const [marketPlace, setMarketPlace] = useState<marketPlaceInterface | any>();
+  const [marketPlace, setMarketPlace] = useState<any>();
   const [nft, setNft] = useState<nft | any>();
 
   //Metamask Connection
@@ -65,6 +65,8 @@ const NftProvider = ({ children }: Props) => {
     console.log(marketPlaceAddress);
     console.log(marketPlaceAbi);
     loadContract(signer);
+    loadListedItems();
+    loadMarketPlaceItems();
     setIsLoading(false);
   };
 
@@ -75,11 +77,12 @@ const NftProvider = ({ children }: Props) => {
       marketPlaceAbi,
       signer
     );
+    // console.log(marketplaceContract);
     console.log(marketplaceContract);
-    console.log(marketPlaceAddress);
-    console.log(marketPlaceAbi);
+    // console.log(marketPlaceAbi);
     setMarketPlace(marketplaceContract);
     const nftContract = new ethers.Contract(nftAddress, nftAbi, signer);
+    console.log(nftContract);
     setNft(nftContract);
     setIsLoading(false);
   };
@@ -103,11 +106,11 @@ const NftProvider = ({ children }: Props) => {
 
   // Create NFT Function
   const createNFT = async (): Promise<void> => {
-    if (!image || !price || !category || !name) return;
+    if (!image || !price || !description || !name) return;
     setIsLoading(true);
     try {
       const result = await client.add(
-        JSON.stringify({ image, name, category })
+        JSON.stringify({ image, name, description })
       );
       mintThenList(result);
       setIsLoading(false);
@@ -143,9 +146,24 @@ const NftProvider = ({ children }: Props) => {
 
   //Load Purchased Items
   const loadPurchasedItems = async (): Promise<void> => {
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    // Get Signer
+    const signer = provider.getSigner();
+
+    const marketplaceContract = new ethers.Contract(
+      marketPlaceAddress,
+      marketPlaceAbi,
+      signer
+    );
+
     //Fetch purchased items from marketplace by querying the NFTPurchased event
 
-    const filter = marketPlace.filters.NFTPurchased(
+    const nftContract = new ethers.Contract(nftAddress, nftAbi, signer);
+    
+
+    const filter = marketplaceContract?.filters?.NFTPurchased(
       null,
       null,
       null,
@@ -153,21 +171,21 @@ const NftProvider = ({ children }: Props) => {
       null,
       account
     );
-    const results = await marketPlace.queryFilter(filter);
+    const results = await marketplaceContract?.queryFilter(filter);
 
     //fetch metadata of each nft and add that to listedItems object
     const purchases = await Promise.all(
-      results.map(async (i: any) => {
+      results?.map(async (i: any) => {
         //Fetch argument from each result
         i = i.args;
         //Get uri url from nft contract
-        const uri = await nft.tokenURI(i.tokenId);
+        const uri = await nftContract?.tokenURI(i.tokenId);
         //use uri to fetch the nft metadata stored on ipfs
         const response = await fetch(uri);
         const metadata = await response.json();
 
         //Get total price of item(item fee + price)
-        const totalPrice = await marketPlace.getTotalPrice(i.itemId);
+        const totalPrice = await marketplaceContract?.getTotalPrice(i.itemId);
 
         let purchasedItems = {
           totalPrice,
@@ -187,21 +205,46 @@ const NftProvider = ({ children }: Props) => {
 
   //Load Listed Items
   const loadListedItems = async (): Promise<void> => {
-    const itemCount = await marketPlace?.itemCount();
+  
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    // Get Signer
+    const signer = provider.getSigner();
+
+    const marketplaceContract = new ethers.Contract(
+      marketPlaceAddress,
+      marketPlaceAbi,
+      signer
+    );
+
+    const nftContract = new ethers.Contract(nftAddress, nftAbi, signer);
+    // console.log(nftContract);
+
+    console.log("Called the load listed Items function");
+    const itemCount = await marketplaceContract?.itemCount();
+    console.log(
+      Math.round(
+        parseFloat(ethers.utils.formatUnits(itemCount)) * 10 ** 18
+      ),
+      "Item Count"
+    );
     let listedItems = [];
     let soldItems = [];
 
     for (let index = 0; index < itemCount; index++) {
-      const i = await marketPlace?.items(index);
-      if (i.seller.toLowerCase() === account) {
+      const i = await marketplaceContract?.items(index);
+      if (i?.seller.toLowerCase() === account) {
         // Get URI URL from nft contract
-        const uri = await nft?.tokenURL(i.tokenId);
-        //use the uri to fetch metadata stored on ipfs
-        const response = await fetch(uri);
+        const uri = await nftContract?.tokenURI(i.tokenId);
+        const neededUri = uri.split("ipfs/");
+        console.log(neededUri);
+        //use uri to fetch nft metadata stored on ipfs
+        const response = await fetch(`https://nft-store.infura-ipfs.io/ipfs/${neededUri[1]}`);
         const metadata = await response.json();
 
         //Get total price of item
-        const totalPrice = await marketPlace?.getTotalPrice(i.itemId);
+        const totalPrice = await marketplaceContract?.getTotalPrice(i.itemId);
         //Define Listed item object
         let item = {
           totalPrice,
@@ -224,20 +267,50 @@ const NftProvider = ({ children }: Props) => {
 
   //Load MarketPlace Items
   const loadMarketPlaceItems = async (): Promise<void> => {
-    console.log(marketPlace);
-    const itemCount = await marketPlace?.itemCount();
+
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    // Get Signer
+    const signer = provider.getSigner();
+
+
+    const marketplaceContract = new ethers.Contract(
+      marketPlaceAddress,
+      marketPlaceAbi,
+      signer
+    );
+
+    const nftContract = new ethers.Contract(nftAddress, nftAbi, signer);
+    // console.log(marketplaceContract, nftContract);
+
+    console.log("Called the load Marketplace items function");
+    const itemCountBigNum = await marketplaceContract?.itemCount();
+    const itemCount = Math.round(
+      parseFloat(ethers.utils.formatUnits(itemCountBigNum)) * 10 ** 18
+    )
+    console.log(
+      Math.round(
+        parseFloat(ethers.utils.formatUnits(itemCountBigNum)) * 10 ** 18
+      ),
+      "Item Count"
+    );
+
     let itemsArray = [];
-    for (let i = 1; i < itemCount.length; i++) {
-      const item = await marketPlace?.items(i);
+    for (let i = 1; i < itemCount; i++) {
+      const item = await marketplaceContract?.items(i);
+      console.log(item);
       if (!item.sold) {
         //get uri url from nft contract
-        const uri = await nft?.tokenURI(item.tokenId);
+        const uri = await nftContract?.tokenURI(item.tokenId);
+        const neededUri = uri.split("ipfs/");
+        console.log(neededUri);
         //use uri to fetch nft metadata stored on ipfs
-        const response = await fetch(uri);
+        const response = await fetch(`https://nft-store.infura-ipfs.io/ipfs/${neededUri[1]}`);
         const metadata = await response.json();
 
         //get total price
-        const totalPrice = await marketPlace?.getTotalPrice(item.itemId);
+        const totalPrice = await marketplaceContract?.getTotalPrice(item.itemId);
         // Add Item to items array
         itemsArray.push({
           totalPrice,
@@ -249,14 +322,29 @@ const NftProvider = ({ children }: Props) => {
         });
       }
     }
+    console.log(itemsArray)
     setItems(itemsArray);
     setIsLoading(false);
   };
 
   // Buy NFT Item
   const buyMarketitem = async (item: nftType): Promise<void> => {
+
+    const provider = new ethers.providers.Web3Provider(
+      (window as any).ethereum
+    );
+    // Get Signer
+    const signer = provider.getSigner();
+
+
+    const marketplaceContract = new ethers.Contract(
+      marketPlaceAddress,
+      marketPlaceAbi,
+      signer
+    );
+console.log(item.totalPrice, "Price of NFT to be bought")
     await (
-      await marketPlace.buyItem(item.itemId, { value: item.totalPrice })
+      await marketplaceContract.buyItem(item.itemId, { value: item.totalPrice })
     ).wait();
     loadMarketPlaceItems();
   };
